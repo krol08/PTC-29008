@@ -11,14 +11,10 @@
 #include <fcntl.h>
 #include <termios.h>
 
-
-//n_bytes - tamanho do quadro, alimentado pela máquina de estados.
 using namespace std;
-
 
 class Enquadramento {
  public:
-
 
   Enquadramento(Serial * dev, int bytes_min, int bytes_max);
   ~Enquadramento();
@@ -40,6 +36,7 @@ class Enquadramento {
   int _min_bytes, _max_bytes;
   Serial * porta;
 
+  //n_bytes - tamanho do quadro, alimentado pela máquina de estados. 
   // bytes recebidos pela MEF até o momento
   int n_bytes;
 
