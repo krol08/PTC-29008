@@ -19,16 +19,16 @@
 using namespace std;
 
 int main() {
+  
   Serial rf("/dev/ttyUSB0", B9600);
-
   Enquadramento fra(&rf, 8,256);
 
+  char * msg = "Um teste~~] do trans~m}i]ssor via ~serial!!!";
+  //char * msg = "Um teste~~] d"; 
+  
+  char buffer[256];
 
- char * msg = "Um teste~~] do trans~m}i]ssor via ~serial!!!";
- //char * msg = "Um teste~~] d"; 
- char buffer[256];
-
- // int n = rf.Write(msg, strlen(msg));
+  // int n = rf.Write(msg, strlen(msg));
   fra.enviar(msg,strlen(msg));
   //cout << "Enviou " << n << " bytes" << endl;
 }
