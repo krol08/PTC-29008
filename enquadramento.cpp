@@ -42,33 +42,33 @@ void Enquadramento:: enviar(void * buffer, int bytes){
 
 	if(bytes >= _min_bytes && bytes <= _max_bytes ){
 
-	quadro [0] = '~';
-	while(i < bytes){
+		quadro [0] = '~';
+		while(i < bytes){
 
-		if(aux_buffer[i] != '~' && aux_buffer[i] != '}'){
-			quadro[k] =  aux_buffer[i];
-			i++;
-			k++;
-    	}
-		if (aux_buffer[i] == '~' ){
-			quadro[k]  = ']' xor 0x20;;
-			quadro[k+1] = aux_buffer[i] xor 0x20;;
-			i++;
-			k = k + 2;
-    	}
-		if (aux_buffer[i] == '}'){
-			quadro[k]  = ']' xor 0x20;;
-			quadro[k+1] = aux_buffer[i] xor 0x20;;
-			i++;
-			k = k + 2;
-     	}
+			if(aux_buffer[i] != '~' && aux_buffer[i] != '}'){
+				quadro[k] =  aux_buffer[i];
+				i++;
+				k++;
+    			}
+			if (aux_buffer[i] == '~' ){
+				quadro[k]  = ']' xor 0x20;;
+				quadro[k+1] = aux_buffer[i] xor 0x20;;
+				i++;
+				k = k + 2;
+    			}
+			if (aux_buffer[i] == '}'){
+				quadro[k]  = ']' xor 0x20;;
+				quadro[k+1] = aux_buffer[i] xor 0x20;;
+				i++;
+				k = k + 2;
+     			}
 
- 	}
- 	quadro[k] = '~';
-	k++;
-	sleep(1);
-	cout<<"msg: "<<quadro<<endl;
- 	this->porta->Write(quadro, k);
+ 		}
+ 		quadro[k] = '~';
+		k++;
+		sleep(1);
+		cout<<"msg: "<<quadro<<endl;
+ 		this->porta->Write(quadro, k);
 	}else{
 		cout<< "Erro mensagem com tamanho incorreto!"<<endl;
 	}
@@ -82,12 +82,12 @@ int Enquadramento:: receber(void * buffer){
 	char * aux_buffer = (char *)buffer;
 
 	while(not c){
-		    this->porta->Read(aux_buffer+i, 1);
-			carac = aux_buffer[i];
-			c = mef_trata_byte(carac, aux_buffer);
-			i++;
+		this->porta->Read(aux_buffer+i, 1);
+		carac = aux_buffer[i];
+		c = mef_trata_byte(carac, aux_buffer);
+		i++;
 
-  		}
+  	}
 	buffer = (void *) aux_buffer;
 	return n_bytes;
 
@@ -103,24 +103,24 @@ int Enquadramento:: receber(void * buffer){
 		}else{
 			_estado_atual = oscioso;
 		}
-		break;
+	break;
 
 	case start:
 		if(byte == '}' ){
-			_estado_atual = escape;
+			estado_atual = escape;
 			break;
 		}
 		if(byte!='~'){
-			 n_bytes = 0;
-			 buffer[n_bytes]= byte;
-		     n_bytes++;
+			n_bytes = 0;
+			buffer[n_bytes]= byte;
+			n_bytes++;
 			_estado_atual = recepcao;
 		}else{
 			_estado_atual = start;
 			//cout << "msg: " << buffer<< endl;
 		}
 
-		break;
+	break;
 
 	case escape:
 		if((byte == ']') ||(byte == '^')) {
@@ -128,11 +128,11 @@ int Enquadramento:: receber(void * buffer){
 			n_bytes++;
 			_estado_atual = recepcao;
 		}else{
-			 n_bytes = 0;
+			n_bytes = 0;
 			cout << "erro de escape!"<<endl;
 			_estado_atual = oscioso;
 		}
-		break;
+	break;
 
 	case recepcao:
 		if(n_bytes > _max_bytes){
