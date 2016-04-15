@@ -23,15 +23,12 @@ Enquadramento::Enquadramento(Serial * dev, int byte_min, int byte_max){
 	_max_bytes = byte_max;
 	this->porta = dev;
 	_estado_atual = oscioso;
-
 }
 
 Enquadramento::~Enquadramento() {
-
 }
 
 void Enquadramento:: enviar(void * buffer, int bytes){
-
 
 	int k=1;
 	int i=0;
@@ -90,7 +87,6 @@ int Enquadramento:: receber(void * buffer){
   	}
 	buffer = (void *) aux_buffer;
 	return n_bytes;
-
   }
 
   bool Enquadramento::mef_trata_byte(char byte, char * buffer){
@@ -119,7 +115,6 @@ int Enquadramento:: receber(void * buffer){
 			_estado_atual = start;
 			//cout << "msg: " << buffer<< endl;
 		}
-
 	break;
 
 	case escape:
