@@ -5,14 +5,6 @@
  *      Author: Karoline da Rocha e Ana Luiza Scharf
  */
 
-
-/*
- * main.cc
- *
- *  Created on: 15 de abr de 2016
- *      Author: root
- */
-
 #include "serial.h"
 #include "enquadramento.h"
 #include <iostream>
