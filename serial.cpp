@@ -2,7 +2,7 @@
  * serial.cpp
  *
  *  Created on: 13 de abr de 2016
- *      Author: root
+ *      Author: Karoline e Ana Luiza
  */
 
 #include "serial.h"
@@ -68,4 +68,3 @@ int Serial::Write(char * buffer, int bytes) {  // Camada de enlace.
   return ::read(tty_fd, buffer, size);
 
 }*/
-
