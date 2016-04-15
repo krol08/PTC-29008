@@ -13,6 +13,7 @@
 // 7D = '}';
 // 5E = '^';
 // 5D = ']';
+//Um teste
 
 using namespace std;
 
