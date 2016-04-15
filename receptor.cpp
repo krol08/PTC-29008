@@ -24,9 +24,7 @@ int main() {
 
   Enquadramento fra1(&rf1, 8,256);
 
-
   char buffer[256];
-
 
   sleep(1);
   int n = fra1.receber(buffer);
