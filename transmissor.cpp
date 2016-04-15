@@ -39,15 +39,4 @@ int main() {
  // int n = rf.Write(msg, strlen(msg));
   fra.enviar(msg,strlen(msg));
   //cout << "Enviou " << n << " bytes" << endl;
-
-
-
 }
-
-
-
-
-
-
-
-
