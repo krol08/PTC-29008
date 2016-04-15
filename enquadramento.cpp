@@ -14,7 +14,6 @@
 // 5E = '^';
 // 5D = ']';
 
-
 using namespace std;
 
 Enquadramento::Enquadramento(Serial * dev, int byte_min, int byte_max){
