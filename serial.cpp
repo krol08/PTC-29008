@@ -2,7 +2,7 @@
  * serial.cpp
  *
  *  Created on: 13 de abr de 2016
- *      Author: Karoline e Ana Luiza
+ *      Author: Karoline da Rocha e Ana Luiza Scharf
  */
 
 #include "serial.h"
