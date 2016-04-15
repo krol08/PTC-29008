@@ -2,7 +2,7 @@
  * receptor.cpp
  *
  *  Created on: 15 de abr de 2016
- *      Author: root
+ *      Author: Karoline e Ana Luiza
  */
 
 #include "serial.h"
@@ -37,12 +37,3 @@ int main() {
 
   cout << endl;
 }
-
-
-
-
-
-
-
-
-
