@@ -29,7 +29,7 @@ int main() {
 
 
   sleep(1);
- int n = fra1.receber(buffer);
+  int n = fra1.receber(buffer);
 
   cout << "Recebeu " << n << " bytes: ";
 
