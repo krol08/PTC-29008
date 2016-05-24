@@ -20,9 +20,10 @@ Enquadramento::Enquadramento(Serial * dev, int byte_min, int byte_max){
 
 	_min_bytes = byte_min;
 	_max_bytes = byte_max;
-	_numSeq =0;
+	_numSeq =  0;
 	this->porta = dev;
 	_estado_atual = oscioso;
+	this->n_bytes = 0;
 }
 
 Enquadramento::~Enquadramento() {
@@ -36,11 +37,9 @@ void Enquadramento:: enviar(char * buffer, int bytes, int tipMsg){
 	int i=0;
 	int tam = (2*_max_bytes)+8;
 	short valu_crc;	
-	//unsigned char num;
-
-
 	char quadro[tam];
 	char buffer_com_crc[bytes+4];
+
 
 	buffer_com_crc[0] = tipMsg;
 	cout<<"Tipo de mensagem: "<<(int)buffer_com_crc[0]<<endl;
@@ -52,35 +51,20 @@ void Enquadramento:: enviar(char * buffer, int bytes, int tipMsg){
 	
 	valu_crc = crcFast(buffer_com_crc,(bytes+2));
 
-	//printf("\ncrc Transmissor: 0x%X\n", valu_crc);
 	unsigned char high = (valu_crc >> 8);
 	unsigned char low = (valu_crc & 0xff);
 	buffer_com_crc[bytes + 2] = high;
 	buffer_com_crc[bytes + 3] = low;
 
-	simula_erro(buffer_com_crc, (bytes+2));
-
-	//printf("\ncrc Transmissorh: 0x%X\n", high);
-	//printf("\ncrc Transmissorl: 0x%X\n", low);
-	//printf("\ncrc Transmissorh: 0x%X\n", buffer_com_crc[bytes + 2]);
-	//printf("\ncrc Transmissorl: 0x%X\n", buffer_com_crc[bytes + 3]);
-
-	///cout<<"Buffer com crc:  "<<buffer_com_crc<<"b: "<<bytes<<endl;
-	//for (int k = 0; k < bytes+4; k++) {
-		 //printf("\ncrc buffer: %X\n", buffer_com_crc[k]);
-	//}
-
-	//if(bytes >= _min_bytes && bytes <= _max_bytes ){
+	//simula_erro(buffer_com_crc, (bytes+2));
 
 		quadro [0] = '~';
-		//printf("------->%x\n",quadro[0]);
 		while(i < (bytes +4)){
 
 			if(buffer_com_crc[i] != '~' && buffer_com_crc[i] != '}'){
 				quadro[k] =  buffer_com_crc[i];
 				i++;
 
-				//printf("------->%x\n",quadro[k]);
 				k++;
     			}
 			if (buffer_com_crc[i] == '~' ){
@@ -88,8 +72,6 @@ void Enquadramento:: enviar(char * buffer, int bytes, int tipMsg){
 				quadro[k+1] = buffer_com_crc[i] xor 0x20;;
 				i++;
 
-				//printf("------->%x\n",quadro[k]);
-				//printf("------->%x\n",quadro[k+1]);
 				k = k + 2;
     			}
 			if (buffer_com_crc[i] == '}'){
@@ -97,24 +79,17 @@ void Enquadramento:: enviar(char * buffer, int bytes, int tipMsg){
 				quadro[k+1] = buffer_com_crc[i] xor 0x20;;
 				i++;
 
-				//printf("------->%x\n",quadro[k]);
-				//printf("------->%x\n",quadro[k+1]);
 				k = k + 2;
 
      			}
 
  		}
  		quadro[k] = '~';
-		//printf("--->%x\n",quadro[k]);
 		k++;
 
-		cout<< "Mensagem enviada: "<<quadro<<endl;
-		//unpack(quadro, k);
+		//cout<< "Mensagem enviada: "<<quadro<<endl;
  		this->porta->Write(quadro, k);
  		tcdrain(this->porta->get_serial());
-	//}else{
-		//cout<< "Erro mensagem com tamanho incorreto!"<<endl;
-	//}
 }
 int Enquadramento:: receber(char * buffer){
 
@@ -141,8 +116,7 @@ int Enquadramento:: receber(char * buffer){
 	short crcTrans = low | (high << 8);
 
 	short crcRec = crcFast(buffer,(n_bytes-2));
-	//printf("crc transmissor1: 0x%X\n", crcTrans);
-	//printf("crc receptor1: 0x%X\n", crcRec);
+
 	
 	if (crcTrans == crcRec) {
 		
