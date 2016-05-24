@@ -2,7 +2,7 @@
  * Arq.cpp
  *
  *  Created on: 5 de mai de 2016
- *      Author: root
+ *      Author: Karoline e Ana Luiza
  */
 
 #include "arq.h"
@@ -168,17 +168,16 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 	   			cout<<"Estado: 1 -> Evento: NÃO ACK"<<endl;
 				cout<<"TX: "<<_num_seq_tx<<endl;
 				cout<<"RX: "<<_num_seq_rx<<endl;
+
 				this->arq_enquadra->set_numSeq(_num_seq_tx);
 	   			nSeq = this->arq_enquadra->get_numSeq();
 	   			if(buffer[1] != nSeq){
 	   				_estado_atual = e1;
-					_num_seq_tx = not _num_seq_tx;
-	   				this->arq_enquadra->set_numSeq(_num_seq_tx);
 					cout<<"Enviando quadro com sequência: "<<nSeq<<endl;
 	   				this->arq_enquadra->enviar(this->_dado_tx, this->_nBytes_tx, 3);
 					cout<<"TX-fim: "<<_num_seq_tx<<endl;
-				        cout<<"RX-fim: "<<_num_seq_rx<<endl;
-	    			}
+				    cout<<"RX-fim: "<<_num_seq_rx<<endl;
+	    		}
 
 
 			}
