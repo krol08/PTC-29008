@@ -102,7 +102,7 @@ int Enquadramento:: receber(void * buffer){
 
 	case start:
 		if(byte == '}' ){
-			estado_atual = escape;
+			_estado_atual = escape;
 			break;
 		}
 		if(byte!='~'){
