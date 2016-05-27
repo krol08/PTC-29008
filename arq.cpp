@@ -2,7 +2,7 @@
  * Arq.cpp
  *
  *  Created on: 5 de mai de 2016
- *      Author: root
+ *      Author: Karoline and Ana Luiza
  */
 
 #include "arq.h"
@@ -25,12 +25,14 @@ using namespace std;
 
 Arq::Arq(Enquadramento * dev_enquadra, tun * dev_tun) {
 	
-	_num_seq_tx = 0;
-	_num_seq_rx = 0;
-	_estado_atual = e0;
-	_nBytes_tx = 0;
-	_nBytes_rx = 0;
-	_timeout = false;
+	this->_num_seq_tx = 0;
+	this->_num_seq_rx = 0;
+	this->_estado_atual = e0;
+	this->_nBytes_tx = 0;
+	this->_nBytes_rx = 0;
+	this->_flag_tun = true;
+	this->_flag_serial= true;
+	this->_ack = true;
 	this->arq_enquadra = dev_enquadra;
 	this->arq_tun = dev_tun;
 
@@ -54,7 +56,6 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 
 	int tam = this->arq_enquadra->get_maxByte();
 	char quadro[tam];
-	char  buffer_ack [2];
 	int num_bytes = 0;
 	int num = 0;
 	int nSeq;
@@ -69,6 +70,11 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 					cout<<"Estado: 0 -> Evento: PAYLOAD"<<endl;
 					cout<<"TX: "<<_num_seq_tx<<endl;
 					cout<<"RX: "<<_num_seq_rx<<endl;
+
+					this->_flag_serial = true;
+					this->_flag_tun = false;
+					this->_ack = false;
+
 					_estado_atual = e1;
 
 					num_bytes = tipEther_envia(buffer, quadro,bytes);
@@ -93,6 +99,14 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 					cout<<"Estado: 0 -> Evento: FRAME"<<(int)buffer[1]<<endl;
 					cout<<"TX: "<<_num_seq_tx<<endl;
 					cout<<"RX: "<<_num_seq_rx<<endl;
+
+					this->_flag_serial = true;
+
+					if (this->_ack == true){
+						this->_flag_tun = true;
+					}else{
+						this->_flag_tun = false;
+					}
 
 					this->arq_enquadra->set_numSeq(_num_seq_rx);
 					nSeq = this->arq_enquadra->get_numSeq();
@@ -173,6 +187,12 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 	   			nSeq = this->arq_enquadra->get_numSeq();
 	   			if(buffer[1] != nSeq){
 	   				_estado_atual = e1;
+
+
+					this->_flag_serial = true;
+					this->_flag_tun = false;
+					this->_ack = false;
+
 					cout<<"Enviando quadro com sequência: "<<nSeq<<endl;
 	   				this->arq_enquadra->enviar(this->_dado_tx, this->_nBytes_tx, 3);
 					cout<<"TX-fim: "<<_num_seq_tx<<endl;
@@ -188,6 +208,13 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 					cout<<"RX: "<<_num_seq_rx<<endl;
 
 
+					this->_flag_serial = true;
+
+					if (this->_ack == true){
+						this->_flag_tun = true;
+					}else{
+						this->_flag_tun = false;
+					}
 
 					cout<<"Chegou Quadro com seq_"<<this->arq_enquadra->get_numSeq()<<endl;
 					this->arq_enquadra->set_numSeq(_num_seq_rx);
@@ -243,7 +270,13 @@ void Arq::mef(char * buffer, int bytes, tipo_ev even){
 				if(buffer[1] == nSeq){
 					cout<<"Aceito com sequência: "<<nSeq<<endl;
 					_num_seq_tx = not _num_seq_tx;
+
 					_estado_atual = e0;
+
+
+					this->_flag_serial = true;
+					this->_flag_tun = true;
+					this->_ack = true;
 
 				}
 
@@ -366,3 +399,17 @@ void Arq::copia_buffer_rx (char * buffer, int bytes){
 	this->_nBytes_rx = bytes;
 }
 
+bool Arq::get_flag_serial(){
+
+	return this->_flag_serial;
+}
+
+bool Arq::get_flag_tun(){
+
+	return this->_flag_tun;
+}
+
+bool Arq::get_ack(){
+
+	return this->_ack;
+}
