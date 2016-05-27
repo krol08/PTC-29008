@@ -30,9 +30,8 @@ Monitora::Monitora(Serial * dev_serial, tun * dev_tun, Enquadramento * dev_enqua
 	this->mon_tun = dev_tun;
 	this->mon_enquadra = dev_enquadra;
 	this->mon_arq = dev_arq;
-	this->flag_tun = true;
-	this->flag_serial = true;
-	this->ack = true;
+	this->_fd_tun = 0;
+	this->_fd_serial = 0;
 
 
 }
@@ -61,15 +60,15 @@ void Monitora::sentinela(){
 	struct timeval tv;
 	int ret_select;
 
-	if ((this->flag_tun == true) & (this->flag_serial == true)){
+	if ((this->mon_arq->get_flag_tun() == true) & (this->mon_arq->get_flag_serial()  == true)){
 		enable();
 	    cout<<"Enable"<<endl;
 	}
-	if (this->flag_tun == false){
+	if (this->mon_arq->get_flag_tun() == false){
 		disable_tun();
 		 cout<<"desabilita tun"<<endl;
 	}
-	if (this->flag_serial == false){
+	if (this->mon_arq->get_flag_serial() == false){
 		disable_serial();
 		 cout<<"desabilita serial"<<endl;
 
@@ -93,8 +92,8 @@ void Monitora::sentinela(){
 	}else{
 
 		if (ret_select == 0){
-			cout<< " tun: "<<this->flag_tun<<endl;
-			if(this->flag_tun == false){
+			//cout<< " tun: "<<this->mon_arq->get_flag_tun()<<endl;
+			if((this->mon_arq->get_flag_tun()) == false){
 				this->mon_arq->mef(0, 0, Arq::TIMEOUT);
 				cout<< "Timeout ACK! "<<endl;
 
@@ -109,22 +108,11 @@ void Monitora::sentinela(){
 			    unpack(buffer,num_bytes);
 			    if (num_bytes > 0){
 			    	if (buffer[0] == 1){
-			    		this->flag_serial = true;
-			    		this->flag_tun= true;
-			    		this->ack = true;
+
 			    		this->mon_arq->mef(buffer, num_bytes, Arq::ACK);
 
 			    	}else{
-						this->flag_serial = true;
-						if(this->ack == true){
-							this->flag_tun= true;
-							cout<< "estou ack true"<<endl;
-
-						}else{
-							this->flag_tun= false;
-							cout<< "estou ack false"<<endl;
-						}
-							this->mon_arq->mef(buffer, num_bytes, Arq::FRAME);
+						this->mon_arq->mef(buffer, num_bytes, Arq::FRAME);
 					}
 			    }
 
@@ -134,9 +122,6 @@ void Monitora::sentinela(){
 				cout<< "ESTOU NA TUN "<<endl;
 				num = this->mon_tun->read(buffer, 256);
 				unpack(buffer,num);
-				this->flag_serial = true;
-				this->flag_tun= false;
-				this->ack = false;
 				this->mon_arq->mef(buffer,num,Arq::PAYLOAD);
 			}
 		}			
