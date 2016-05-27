@@ -48,11 +48,6 @@ class Monitora {
   int _fd_serial;
   int _fd_tun;
 
-  bool flag_tun;
-
-  bool flag_serial;
-
-  bool ack;
 };
 
 #endif
