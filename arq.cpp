@@ -2,7 +2,7 @@
  * Arq.cpp
  *
  *  Created on: 5 de mai de 2016
- *      Author: Karoline and Ana Luiza
+ *      Author: root
  */
 
 #include "arq.h"
@@ -407,9 +407,4 @@ bool Arq::get_flag_serial(){
 bool Arq::get_flag_tun(){
 
 	return this->_flag_tun;
-}
-
-bool Arq::get_ack(){
-
-	return this->_ack;
 }
